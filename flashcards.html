@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards Premium - Identificación Criminal | SBSN Corregido</title>
+<style>
+:root {
+  --primary-dark: #1a237e;
+  --primary-medium: #283593;
+  --primary-light: #5c6bc0;
+  --primary-lighter: #9fa8da;
+  --primary-lightest: #e8eaf6;
+  --accent: #3f51b5;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f6fa;
+  --bg-tertiary: #eef0f7;
+  --bg-card: #ffffff;
+  --bg-flashcard-front: #e8eaf6;
+  --bg-flashcard-back: #283593;
+  --text-primary: #212121;
+  --text-secondary: #555555;
+  --text-tertiary: #888888;
+  --text-inverse: #ffffff;
+  --border-color: #d0d4e4;
+  --border-light: #e8eaf6;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 50%;
+  --font-family: 'Segoe UI','Inter',-apple-system,BlinkMacSystemFont,Roboto,'Helvetica Neue',Arial,sans-serif;
+  --font-heading: 'Segoe UI','Inter',-apple-system,BlinkMacSystemFont,'SF Pro Display',Arial,sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-md: 1.125rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+  --line-height: 1.7;
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --header-height: 64px;
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-slow: 0.5s ease;
+}
+body.dark-mode {
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --bg-tertiary: #2a2a2a;
+  --bg-card: #1e1e1e;
+  --bg-flashcard-front: #2a2a3e;
+  --bg-flashcard-back: #1a237e;
+  --text-primary: #e0e0e0;
+  --text-secondary: #aaaaaa;
+  --text-tertiary: #777777;
+  --text-inverse: #ffffff;
+  --border-color: #333355;
+  --border-light: #2a2a3e;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.5);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; font-size:16px; }
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height);
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  transition: background var(--transition-base), color var(--transition-base);
+  min-height: 100vh;
+}
+::selection { background: var(--primary-light); color:white; }
+::-webkit-scrollbar { width:8px; height:8px; }
+::-webkit-scrollbar-track { background: var(--bg-tertiary); border-radius:4px; }
+::-webkit-scrollbar-thumb { background: var(--primary-lighter); border-radius:4px; }
+
+/* HEADER */
+.header {
+  position:fixed; top:0; left:0; right:0; height:var(--header-height);
+  background: var(--bg-primary); border-bottom:1px solid var(--border-color);
+  display:flex; align-items:center; padding:0 var(--spacing-lg);
+  z-index:1000; box-shadow:var(--shadow-sm); transition: background var(--transition-base);
+  gap:var(--spacing-md);
+}
+.header__logo {
+  display:flex; align-items:center; gap:var(--spacing-sm);
+  font-family:var(--font-heading); font-size:var(--font-size-md); font-weight:700;
+  color:var(--primary-dark); white-space:nowrap; text-decoration:none;
+}
+body.dark-mode .header__logo { color:var(--primary-lighter); }
+.header__logo-icon {
+  width:36px; height:36px; border-radius:var(--radius-md);
+  background:var(--primary-dark); color:white; display:flex; align-items:center;
+  justify-content:center; font-size:var(--font-size-lg); flex-shrink:0;
+}
+.header__actions { display:flex; align-items:center; gap:var(--spacing-sm); margin-left:auto; }
+.btn-icon {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:38px; height:38px; border:none; border-radius:var(--radius-full);
+  background:transparent; color:var(--text-secondary); cursor:pointer;
+  font-size:var(--font-size-md); transition:all var(--transition-fast);
+}
+.btn-icon:hover { background:var(--bg-tertiary); color:var(--primary-medium); }
+
+/* CONTROLS BAR */
+.controls {
+  position:fixed; top:var(--header-height); left:0; right:0;
+  background:var(--bg-primary); border-bottom:1px solid var(--border-color);
+  padding:var(--spacing-sm) var(--spacing-lg); z-index:900;
+  display:flex; align-items:center; gap:var(--spacing-sm); flex-wrap:wrap;
+  transition:background var(--transition-base);
+}
+.controls select, .controls input {
+  padding:6px 12px; border:1px solid var(--border-color); border-radius:var(--radius-md);
+  background:var(--bg-primary); color:var(--text-primary);
+  font-family:var(--font-family); font-size:var(--font-size-sm);
+}
+.controls select:focus, .controls input:focus {
+  outline:none; border-color:var(--primary-light); box-shadow:0 0 0 3px var(--primary-lightest);
+}
+.controls .btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:6px 14px; border:none; border-radius:var(--radius-md);
+  font-family:var(--font-family); font-size:var(--font-size-sm); font-weight:500;
+  cursor:pointer; transition:all var(--transition-fast); white-space:nowrap;
+}
+.btn-primary { background:var(--primary-medium); color:white; }
+.btn-primary:hover { background:var(--primary-dark); }
+.btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border-color); }
+.btn-secondary:hover { background:var(--border-light); }
+.btn-outline { background:transparent; color:var(--primary-medium); border:1px solid var(--primary-medium); }
+.btn-outline:hover { background:var(--primary-medium); color:white; }
+.btn-icon-sm { width:32px; height:32px; }
+
+/* COUNTER */
+.counter {
+  font-size:var(--font-size-sm); color:var(--text-tertiary);
+  margin-left:auto; white-space:nowrap; font-weight:500;
+}
+
+/* MAIN */
+.main {
+  margin-top:calc(var(--header-height) + 56px);
+  padding:var(--spacing-lg); max-width:1400px; margin-left:auto; margin-right:auto;
+}
+
+/* CATEGORY FILTER PILLS */
+.filter-pills {
+  display:flex; gap:6px; flex-wrap:wrap; margin-bottom:var(--spacing-lg);
+  padding:var(--spacing-sm) 0;
+}
+.filter-pill {
+  padding:4px 14px; border-radius:var(--radius-xl); font-size:var(--font-size-xs);
+  font-weight:600; cursor:pointer; border:1px solid var(--border-color);
+  background:var(--bg-primary); color:var(--text-secondary);
+  transition:all var(--transition-fast); text-transform:uppercase; letter-spacing:0.3px;
+}
+.filter-pill:hover { border-color:var(--primary-lighter); color:var(--primary-medium); }
+.filter-pill.active { background:var(--primary-medium); color:white; border-color:var(--primary-medium); }
+
+/* FLASHCARD GRID */
+.flashcard-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));
+  gap:var(--spacing-lg); margin-bottom:var(--spacing-xl);
+}
+
+/* FLASHCARD */
+.flashcard {
+  perspective:1000px; height:260px; cursor:pointer;
+  opacity:1; transition:opacity var(--transition-base), transform var(--transition-base);
+}
+.flashcard.hidden { display:none; }
+.flashcard.flipped .flashcard__inner { transform:rotateY(180deg); }
+.flashcard__inner {
+  position:relative; width:100%; height:100%;
+  transition:transform var(--transition-slow); transform-style:preserve-3d;
+}
+.flashcard__front, .flashcard__back {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  backface-visibility:hidden; border-radius:var(--radius-lg);
+  display:flex; flex-direction:column; padding:var(--spacing-lg);
+  box-shadow:var(--shadow-sm); overflow-y:auto;
+}
+.flashcard__front {
+  background:var(--bg-flashcard-front); border:1px solid var(--border-color);
+  color:var(--text-primary); justify-content:center; align-items:center; text-align:center;
+}
+.flashcard__back {
+  background:var(--bg-flashcard-back); color:white;
+  transform:rotateY(180deg); text-align:left; justify-content:flex-start;
+}
+.flashcard__back p { color:rgba(255,255,255,0.9); margin-bottom:var(--spacing-sm); font-size:var(--font-size-sm); }
+.flashcard__back strong { color:white; }
+.flashcard__back .explanation { margin-top:var(--spacing-sm); padding-top:var(--spacing-sm); border-top:1px solid rgba(255,255,255,0.2); font-size:var(--font-size-xs); color:rgba(255,255,255,0.7); }
+.category-badge {
+  display:inline-block; padding:2px 10px; border-radius:var(--radius-xl);
+  font-size:var(--font-size-xs); font-weight:600; text-transform:uppercase;
+  letter-spacing:0.3px; margin-bottom:var(--spacing-sm);
+}
+.cat-conceptos .category-badge { background:#e8eaf6; color:#1a237e; }
+.cat-sistemas .category-badge { background:#e3f2fd; color:#0d47a1; }
+.cat-fisionomico .category-badge { background:#fce4ec; color:#880e4f; }
+.cat-somatotipos .category-badge { background:#fff3e0; color:#e65100; }
+.cat-craneo .category-badge { background:#f3e5f5; color:#4a148c; }
+.cat-facial .category-badge { background:#e0f2f1; color:#004d40; }
+.cat-reconocimiento .category-badge { background:#fbe9e7; color:#bf360c; }
+.cat-retrato .category-badge { background:#fff8e1; color:#f57f17; }
+.cat-oreja .category-badge { background:#e8eaf6; color:#283593; }
+.cat-otros .category-badge { background:#e1f5fe; color:#01579b; }
+.cat-articulos .category-badge { background:#efebe9; color:#3e2723; }
+.cat-casos .category-badge { background:#f1f8e9; color:#33691e; }
+body.dark-mode .cat-conceptos .category-badge { background:rgba(92,107,192,0.2); color:#9fa8da; }
+body.dark-mode .cat-sistemas .category-badge { background:rgba(2,119,189,0.2); color:#4fc3f7; }
+body.dark-mode .cat-fisionomico .category-badge { background:rgba(194,24,91,0.2); color:#f48fb1; }
+body.dark-mode .cat-somatotipos .category-badge { background:rgba(245,127,23,0.2); color:#ffb74d; }
+body.dark-mode .cat-craneo .category-badge { background:rgba(156,39,176,0.2); color:#ce93d8; }
+body.dark-mode .cat-facial .category-badge { background:rgba(0,150,136,0.2); color:#80cbc4; }
+body.dark-mode .cat-reconocimiento .category-badge { background:rgba(230,74,25,0.2); color:#ffab91; }
+body.dark-mode .cat-retrato .category-badge { background:rgba(245,127,23,0.2); color:#ffd54f; }
+body.dark-mode .cat-oreja .category-badge { background:rgba(40,53,131,0.2); color:#9fa8da; }
+body.dark-mode .cat-otros .category-badge { background:rgba(2,119,189,0.2); color:#4fc3f7; }
+body.dark-mode .cat-articulos .category-badge { background:rgba(62,39,35,0.2); color:#bcaaa4; }
+body.dark-mode .cat-casos .category-badge { background:rgba(51,105,30,0.2); color:#aed581; }
+
+.flashcard__front h3 { font-size:var(--font-size-base); margin-bottom:var(--spacing-sm); color:var(--text-primary); }
+.flashcard__bookmark {
+  position:absolute; top:8px; right:8px; z-index:10;
+  width:30px; height:30px; border:none; border-radius:var(--radius-full);
+  background:rgba(255,255,255,0.8); cursor:pointer; font-size:var(--font-size-sm);
+  display:flex; align-items:center; justify-content:center;
+  transition:all var(--transition-fast); color:var(--text-tertiary);
+}
+.flashcard__bookmark:hover { background:white; }
+.flashcard__bookmark.active { color:var(--warning); background:rgba(255,255,255,0.95); }
+body.dark-mode .flashcard__bookmark { background:rgba(0,0,0,0.4); color:var(--text-tertiary); }
+body.dark-mode .flashcard__bookmark:hover { background:rgba(0,0,0,0.6); }
+body.dark-mode .flashcard__bookmark.active { color:var(--warning); background:rgba(0,0,0,0.6); }
+
+/* FLASHCARD NUMBER ON FRONT */
+.flashcard__number {
+  position:absolute; top:8px; left:8px; z-index:10;
+  font-size:var(--font-size-xs); color:var(--text-tertiary); font-weight:600;
+  background:rgba(255,255,255,0.7); padding:2px 8px; border-radius:var(--radius-sm);
+}
+body.dark-mode .flashcard__number { background:rgba(0,0,0,0.3); }
+
+/* EMPTY STATE */
+.empty-state {
+  text-align:center; padding:var(--spacing-3xl,4rem) var(--spacing-lg);
+  color:var(--text-tertiary); grid-column:1/-1;
+}
+.empty-state h3 { font-size:var(--font-size-xl); margin-bottom:var(--spacing-md); color:var(--text-tertiary); }
+.empty-state p { font-size:var(--font-size-sm); }
+
+/* BOOKMARKS BAR */
+.bookmarks-bar {
+  display:none; background:var(--bg-tertiary); border:1px solid var(--border-color);
+  border-radius:var(--radius-md); padding:var(--spacing-md); margin-bottom:var(--spacing-lg);
+}
+.bookmarks-bar.visible { display:block; }
+.bookmarks-bar h4 { font-size:var(--font-size-sm); margin-bottom:var(--spacing-sm); }
+.bookmarks-bar .bookmark-tag {
+  display:inline-block; padding:2px 10px; border-radius:var(--radius-xl);
+  font-size:var(--font-size-xs); background:var(--primary-lightest);
+  color:var(--primary-dark); cursor:pointer; margin:2px;
+  transition:all var(--transition-fast);
+}
+body.dark-mode .bookmark-tag { background:rgba(92,107,192,0.2); color:var(--primary-lighter); }
+.bookmark-tag:hover { background:var(--primary-medium); color:white; }
+
+/* RESPONSIVE */
+@media (max-width:768px) {
+  .header { padding:0 var(--spacing-md); }
+  .header__logo span { display:none; }
+  .controls { padding:var(--spacing-sm) var(--spacing-md); gap:6px; }
+  .controls select, .controls input { font-size:var(--font-size-xs); padding:4px 8px; }
+  .flashcard-grid { grid-template-columns:1fr; }
+  .flashcard { height:220px; }
+  .counter { font-size:var(--font-size-xs); }
+  .filter-pills { gap:4px; }
+  .filter-pill { font-size:10px; padding:3px 10px; }
+}
+@media (max-width:480px) {
+  .flashcard { height:200px; }
+  .controls .btn { font-size:var(--font-size-xs); padding:4px 10px; }
+}
+
+/* CORRECCIÓN SBSN BANNER */
+.sbsn-banner {
+  background: linear-gradient(135deg, #fff8e1, #fff3e0);
+  border: 2px solid #f57f17;
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+body.dark-mode .sbsn-banner {
+  background: linear-gradient(135deg, #3e2723, #4e342e);
+  border-color: #ffb74d;
+}
+.sbsn-banner .sbsn-icon { font-size: 1.8rem; flex-shrink:0; }
+.sbsn-banner .sbsn-text { flex:1; }
+.sbsn-banner .sbsn-text h3 { color: #e65100; font-size:var(--font-size-base); margin-bottom:2px; }
+body.dark-mode .sbsn-banner .sbsn-text h3 { color: #ffb74d; }
+.sbsn-banner .sbsn-text p { color: var(--text-secondary); font-size:var(--font-size-sm); }
+.sbsn-banner .sbsn-badge {
+  background: #2e7d32; color: white;
+  padding: 6px 18px; border-radius: var(--radius-md);
+  font-weight: 700; font-size: var(--font-size-md);
+  letter-spacing: 1px; flex-shrink:0;
+}
+
+/* GALERÍA DE IMÁGENES */
+.galeria-section {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  border-top: 2px solid var(--border-color);
+}
+.galeria-section h2 {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-xl);
+  color: var(--primary-dark);
+  margin-bottom: var(--spacing-sm);
+  display: flex; align-items: center; gap: 8px;
+}
+body.dark-mode .galeria-section h2 { color: var(--primary-lighter); }
+.galeria-section > p {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-lg);
+}
+.galeria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--spacing-md);
+}
+.galeria-card {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-card);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.galeria-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.galeria-card { cursor:pointer; }
+.galeria-card .galeria-img {
+  width: 100%; height: 160px;
+  background: var(--bg-tertiary);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-tertiary);
+  font-size: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.galeria-card .galeria-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-base);
+}
+.galeria-card:hover .galeria-img img { transform:scale(1.05); }
+.galeria-card .galeria-img .badge-count {
+  position: absolute; bottom: 6px; right: 6px;
+  background: rgba(0,0,0,0.7); color: white;
+  padding: 2px 10px; border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs); font-weight: 600;
+}
+
+/* LIGHTBOX */
+.lightbox {
+  display:none; position:fixed; z-index:9999;
+  left:0; top:0; width:100%; height:100%;
+  background:rgba(0,0,0,0.92);
+  align-items:center; justify-content:center;
+  cursor:pointer;
+}
+.lightbox.active { display:flex; }
+.lightbox img {
+  max-width:92vw; max-height:92vh;
+  object-fit:contain; border-radius:var(--radius-md);
+  box-shadow:0 0 60px rgba(0,0,0,0.5);
+}
+.lightbox .lb-close {
+  position:absolute; top:20px; right:30px;
+  color:white; font-size:2.5rem; font-weight:700;
+  cursor:pointer; width:50px; height:50px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%; background:rgba(255,255,255,0.1);
+  transition:background var(--transition-fast);
+}
+.lightbox .lb-close:hover { background:rgba(255,255,255,0.25); }
+.lightbox .lb-caption {
+  position:absolute; bottom:20px; left:50%; transform:translateX(-50%);
+  color:rgba(255,255,255,0.8); font-size:var(--font-size-sm);
+  background:rgba(0,0,0,0.6); padding:6px 18px; border-radius:20px;
+}
+.galeria-card .galeria-info {
+  padding: 10px 14px;
+}
+.galeria-card .galeria-info h4 {
+  font-size: var(--font-size-sm);
+  margin-bottom: 2px;
+}
+.galeria-card .galeria-info p {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+}
+
+/* ARTÍCULOS DESTACADOS */
+.articulos-section {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  border-top: 2px solid var(--border-color);
+}
+.articulos-section h2 {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-xl);
+  color: var(--primary-dark);
+  margin-bottom: var(--spacing-lg);
+  display: flex; align-items: center; gap: 8px;
+}
+body.dark-mode .articulos-section h2 { color: var(--primary-lighter); }
+.articulo-card {
+  display: flex; gap: 14px;
+  padding: 14px 18px;
+  margin-bottom: var(--spacing-md);
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+  border-left: 4px solid var(--primary-light);
+  transition: background var(--transition-fast);
+}
+.articulo-card:hover { background: var(--border-light); }
+.articulo-card .art-icon { font-size: 1.4rem; flex-shrink:0; padding-top:2px; }
+.articulo-card .art-body h4 { font-size: var(--font-size-sm); margin-bottom:2px; color: var(--primary-dark); }
+body.dark-mode .articulo-card .art-body h4 { color: var(--primary-lighter); }
+.articulo-card .art-body p { font-size: var(--font-size-xs); color: var(--text-secondary); }
+.articulo-card .art-body .art-ref { font-size: var(--font-size-xs); color: var(--text-tertiary); margin-top:4px; }
+.articulo-card.highlight {
+  border-left-color: var(--accent);
+  background: #fff5f5;
+}
+body.dark-mode .articulo-card.highlight {
+  background: rgba(211,47,47,0.1);
+}
+.articulo-card.highlight .art-body h4 { color: #c62828; }
+body.dark-mode .articulo-card.highlight .art-body h4 { color: #ef9a9a; }
+
+/* FOOTER VENTA */
+.footer-venta {
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  text-align: center;
+  border-top: 2px solid var(--border-color);
+  color: var(--text-tertiary);
+  font-size: var(--font-size-sm);
+}
+.footer-venta strong { color: var(--primary-dark); }
+body.dark-mode .footer-venta strong { color: var(--primary-lighter); }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a href="#" class="header__logo">
+    <div class="header__logo-icon">&#x1F4DA;</div>
+    <span>Flashcards Premium - Identificación Criminal</span>
+  </a>
+  <div class="header__actions">
+    <button class="btn-icon" id="darkToggle" title="Modo oscuro/claro">&#9790;</button>
+  </div>
+</header>
+
+<div class="controls">
+  <select id="categoryFilter">
+    <option value="all">Todas las categorías</option>
+    <option value="conceptos">Conceptos Fundamentales</option>
+    <option value="sistemas">Sistemas de Identificación</option>
+    <option value="fisionomico">Estudio Fisionómico</option>
+    <option value="somatotipos">Somatotipos</option>
+    <option value="craneo">Anatomía del Cráneo</option>
+    <option value="facial">Análisis Facial Forense</option>
+    <option value="reconocimiento">Actos de Reconocimiento</option>
+    <option value="retrato">Retrato Hablado</option>
+    <option value="oreja">Pabellón Auricular</option>
+    <option value="otros">Otros Sistemas</option>
+    <option value="articulos">Artículos y Códigos</option>
+  </select>
+  <input type="text" id="searchInput" placeholder="Buscar flashcards..." style="min-width:180px;flex:1;max-width:300px">
+  <button class="btn btn-secondary" id="shuffleBtn">&#x1F500; Aleatorio</button>
+  <button class="btn btn-secondary" id="resetBtn">&#x21BA; Reiniciar</button>
+  <button class="btn btn-outline" id="bookmarksToggle">&#x2605; Favoritos</button>
+  <span class="counter" id="counter">Flashcard 1/190</span>
+</div>
+
+<div class="sbsn-banner" style="max-width:1400px;margin:10px auto 0;padding:12px 20px;">
+  <div class="sbsn-icon">&#x2705;</div>
+  <div class="sbsn-text">
+    <h3>&#x1F4A1; Corrección importante: SBSN, no SESN</h3>
+    <p>El nombre correcto del sistema es <strong>SBSN</strong> (Sistema Biométrico de Seguridad Nacional). Todas las flashcards han sido corregidas.</p>
+  </div>
+  <div class="sbsn-badge">SBSN &#x2714;</div>
+</div>
+
+<div class="main">
+  <div class="filter-pills" id="filterPills">
+    <span class="filter-pill active" data-cat="all">Todas</span>
+    <span class="filter-pill" data-cat="conceptos">Conceptos</span>
+    <span class="filter-pill" data-cat="sistemas">Sistemas</span>
+    <span class="filter-pill" data-cat="fisionomico">Fisionómico</span>
+    <span class="filter-pill" data-cat="somatotipos">Somatotipos</span>
+    <span class="filter-pill" data-cat="craneo">Cráneo</span>
+    <span class="filter-pill" data-cat="facial">Facial Forense</span>
+    <span class="filter-pill" data-cat="reconocimiento">Reconocimiento</span>
+    <span class="filter-pill" data-cat="retrato">Retrato Hablado</span>
+    <span class="filter-pill" data-cat="oreja">Pabellón Auricular</span>
+    <span class="filter-pill" data-cat="otros">Otros Sistemas</span>
+    <span class="filter-pill" data-cat="articulos">Artículos</span>
+  </div>
+
+  <div class="bookmarks-bar" id="bookmarksBar">
+    <h4>&#x2605; Flashcards marcados</h4>
+    <div id="bookmarkTags"></div>
+  </div>
+
+  <div class="flashcard-grid" id="flashcardGrid"></div>
+
+  <!-- ===== GALERÍA DE IMÁGENES ===== -->
+  <div class="galeria-section">
+    <h2>&#x1F4F8; Galería de estudio</h2>
+    <p>Imágenes anatómicas y de referencia organizadas por categoría para complementar tu estudio.</p>
+    <div class="galeria-grid">
+      <div class="galeria-card">
+        <div class="galeria-img">
+          <img src="img/1-50_ident_pagina_10_imagen_1.png" alt="Anatomía" loading="lazy">
+          <span class="badge-count">Anatomía</span>
+        </div>
+        <div class="galeria-info">
+          <h4>Anatomía del cráneo</h4>
+          <p>Huesos del neurocráneo y viscerocráneo</p>
+        </div>
+      </div>
+      <div class="galeria-card">
+        <div class="galeria-img">
+          <img src="img/1-50_ident_pagina_20_imagen_1.png" alt="Huellas" loading="lazy">
+          <span class="badge-count">Dactiloscopia</span>
+        </div>
+        <div class="galeria-info">
+          <h4>Clasificación de huellas</h4>
+          <p>Arco, presilla, verticilo y mixto</p>
+        </div>
+      </div>
+      <div class="galeria-card">
+        <div class="galeria-img">
+          <img src="img/1-50_ident_pagina_30_imagen_1.png" alt="Rostro" loading="lazy">
+          <span class="badge-count">Fisionómico</span>
+        </div>
+        <div class="galeria-info">
+          <h4>Puntos somatométricos</h4>
+          <p>Glabela, Nasion, Sub-nasal, Pogonion</p>
+        </div>
+      </div>
+      <div class="galeria-card">
+        <div class="galeria-img">
+          <img src="img/1-50_ident_pagina_40_imagen_1.png" alt="Cráneo" loading="lazy">
+          <span class="badge-count">Cráneo</span>
+        </div>
+        <div class="galeria-info">
+          <h4>Base del cráneo</h4>
+          <p>Esfenoides, silla turca y foramen magnum</p>
+        </div>
+      </div>
+      <div class="galeria-card">
+        <div class="galeria-img">
+          <img src="img/morfocomparativo/morfo_02_segmentos_faciales.png" alt="Segmentos faciales" loading="lazy">
+          <span class="badge-count">Facial</span>
+        </div>
+        <div class="galeria-info">
+          <h4>Segmentos faciales</h4>
+          <p>Tercios superior, medio e inferior del rostro</p>
+        </div>
+      </div>
+      <div class="galeria-card">
+        <div class="galeria-img">
+          <img src="img/morfocomparativo/foto_04_posicion_anatomica.png" alt="Posición anatómica" loading="lazy">
+          <span class="badge-count">Anatomía</span>
+        </div>
+        <div class="galeria-info">
+          <h4>Posición anatómica</h4>
+          <p>Planos sagital, frontal y transversal</p>
+        </div>
+      </div>
+      <div class="galeria-card">
+        <div class="galeria-img">
+          <img src="img/morfocomparativo/morfo_19_frente_altura.png" alt="Frente" loading="lazy">
+          <span class="badge-count">Retrato</span>
+        </div>
+        <div class="galeria-info">
+          <h4>Análisis de frente</h4>
+          <p>Altura, anchura e inclinación frontal</p>
+        </div>
+      </div>
+      <div class="galeria-card">
+        <div class="galeria-img">
+          <img src="img/morfocomparativo/lineas_02_horiz_frontal.png" alt="Líneas faciales" loading="lazy">
+          <span class="badge-count">Facial</span>
+        </div>
+        <div class="galeria-info">
+          <h4>Líneas de referencia</h4>
+          <p>Líneas horizontales y verticales del rostro</p>
+        </div>
+      </div>
+      <div class="galeria-card">
+        <div class="galeria-img">
+          <img src="img/morfocomparativo/foto_02_foto_frontal.png" alt="Foto frontal" loading="lazy">
+          <span class="badge-count">Cotejo</span>
+        </div>
+        <div class="galeria-info">
+          <h4>Fotografía frontal forense</h4>
+          <p>Referencia para análisis morfocomparativo</p>
+        </div>
+      </div>
+      <div class="galeria-card">
+        <div class="galeria-img">
+          <img src="img/morfocomparativo/foto_03_foto_perfil.png" alt="Foto perfil" loading="lazy">
+          <span class="badge-count">Cotejo</span>
+        </div>
+        <div class="galeria-info">
+          <h4>Fotografía de perfil forense</h4>
+          <p>Referencia para análisis de plano facial</p>
+        </div>
+      </div>
+      <div class="galeria-card">
+        <div class="galeria-img">
+          <img src="img/morfocomparativo/morfo_06_piel_fototipos.png" alt="Fototipos" loading="lazy">
+          <span class="badge-count">Piel</span>
+        </div>
+        <div class="galeria-info">
+          <h4>Fototipos de piel</h4>
+          <p>Clasificación según escala de Fitzpatrick</p>
+        </div>
+      </div>
+      <div class="galeria-card">
+        <div class="galeria-img">
+          <img src="img/oreja.png" alt="Pabellón auricular" loading="lazy">
+          <span class="badge-count">Oreja</span>
+        </div>
+        <div class="galeria-info">
+          <h4>Pabellón auricular</h4>
+          <p>Hélix, Antihélix, Trago, Antitrago, Lóbulo, Concha</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== ARTÍCULOS DESTACADOS ===== -->
+  <div class="articulos-section">
+    <h2>&#x1F4DD; Artículos y fundamentos legales</h2>
+    <div class="articulo-card highlight">
+      <div class="art-icon">&#x2696;&#xFE0F;</div>
+      <div class="art-body">
+        <h4>Ley 50 — Servicios Periciales</h4>
+        <p>Regula la función de los peritos y la presentación de informes periciales. Fundamento legal del retrato hablado.</p>
+        <div class="art-ref">Sección 3.8 del Directorio de Servicios Periciales</div>
+      </div>
+    </div>
+    <div class="articulo-card">
+      <div class="art-icon">&#x1F4DC;</div>
+      <div class="art-body">
+        <h4>Art. 326 CPP — Reconocimiento como acto de investigación</h4>
+        <p>Marco general para los actos de reconocimiento de personas dentro del proceso penal.</p>
+      </div>
+    </div>
+    <div class="articulo-card">
+      <div class="art-icon">&#x1F4DC;</div>
+      <div class="art-body">
+        <h4>Art. 327 CPP — Interrogatorio previo</h4>
+        <p>Prohíbe mostrar imágenes del sospechoso antes del acto de reconocimiento para evitar contaminación visual.</p>
+      </div>
+    </div>
+    <div class="articulo-card">
+      <div class="art-icon">&#x1F4DC;</div>
+      <div class="art-body">
+        <h4>Art. 328 CPP — Rueda de detenidos</h4>
+        <p>Mínimo 6 personas con rasgos similares al investigado. Observación desde cámara Gesell.</p>
+      </div>
+    </div>
+    <div class="articulo-card">
+      <div class="art-icon">&#x1F4DC;</div>
+      <div class="art-body">
+        <h4>Art. 330 CPP — Reconocimiento fotográfico</h4>
+        <p>Mínimo 10 fotografías (imputado + 9 distractores). Regulado para evitar sesgos en la identificación.</p>
+      </div>
+    </div>
+    <div class="articulo-card highlight">
+      <div class="art-icon">&#x26A0;&#xFE0F;</div>
+      <div class="art-body">
+        <h4>Art. 385 CP — Falso testimonio</h4>
+        <p>Prisión de 2 a 4 años. Si afecta sentencia condenatoria: 4 a 8 años. Se lee al reconocedor antes del acto.</p>
+        <div class="art-ref">Código Penal de Panamá</div>
+      </div>
+    </div>
+    <div class="articulo-card">
+      <div class="art-icon">&#x1F4DC;</div>
+      <div class="art-body">
+        <h4>Art. 410 CPP — Informe pericial</h4>
+        <p>Regula la presentación de informes periciales. Deben ser claros, objetivos y fundamentados científicamente.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== LIGHTBOX ===== -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="lb-close" onclick="closeLightbox()">&times;</span>
+    <img id="lightboxImg" src="" alt="">
+    <span class="lb-caption" id="lightboxCaption"></span>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="footer-venta">
+    <strong>Flashcards Premium - Identificación Criminal</strong> &mdash; Material actualizado con SBSN corregido<br>
+    Basado en el contenido de la profesora <strong>Magdalena González</strong> &mdash; UNACHI
+  </div>
+
+</div>
+
+<script>
+const flashcardsData = [
+  // ===== 1. CONCEPTOS FUNDAMENTALES (20) =====
+  {cat:"conceptos",q:"¿Qué es identificación?",r:"Es el proceso de reconocer las características generales de una persona para determinar quién es.",e:"Identificar es el proceso; individualizar es el resultado. La identificación puede ser presuntiva, mientras que la individualización es concluyente."},
+  {cat:"conceptos",q:"¿Qué es individualización?",r:"Nivel más alto de certeza donde se logra diferenciar a un individuo de todos los demás seres humanos de forma inequívoca.",e:"La individualización es el estándar de oro. Ejemplo: ADN, huellas dactilares. Es científicamente demostrable."},
+  {cat:"conceptos",q:"¿Qué diferencia hay entre identificación e individualización?",r:"Identificación es el proceso presuntivo; individualización es el resultado concluyente que distingue a una persona como única.",e:"Identificación: 'persona de complexión robusta'. Individualización: 'la huella pertenece exclusivamente a Juan Pérez'."},
+  {cat:"conceptos",q:"¿Qué es identificación civil?",r:"Conjunto de documentos y registros que el Estado otorga para acreditar la identidad de un ciudadano en la sociedad.",e:"Ejemplos: cédula de identidad, pasaporte, licencia de conducir, carné laboral. Es administrativa."},
+  {cat:"conceptos",q:"¿Qué es identificación médico-legal?",r:"Identificación que se realiza en contexto de medicina forense sobre cadáveres, esqueletos o restos humanos.",e:"Incluye: investigación de cadáveres, esqueletos y restos humanos. Se analizan huesos, prendas, objetos personales."},
+  {cat:"conceptos",q:"¿Qué es identificación judicial?",r:"La que realiza el Ministerio Público dentro de un proceso penal usando fotografía e impresión dactilar.",e:"A diferencia de la civil (administrativa), la judicial es parte de un proceso penal."},
+  {cat:"conceptos",q:"¿Qué es genotipo?",r:"Constitución genética completa determinada por el ADN. No es modificable.",e:"Aplicación forense: análisis de ADN. Se hereda y permanece estable toda la vida."},
+  {cat:"conceptos",q:"¿Qué es fenotipo?",r:"Características observables producto de la interacción entre genotipo y ambiente.",e:"Es modificable. Aplicación forense: descripción física (color de pelo, ojos, estatura)."},
+  {cat:"conceptos",q:"Genotipo vs Fenotipo: diferencias",r:"Genotipo es la constitución genética (ADN); fenotipo son las características observables. Genotipo no es modificable; fenotipo sí.",e:"Genotipo se usa para análisis de ADN; fenotipo para descripción física forense."},
+  {cat:"conceptos",q:"¿Qué es el atavismo biológico?",r:"Teoría de Cesare Lombroso que vinculaba la criminalidad con características físicas primitivas o atávicas.",e:"Totalmente descartada científicamente. No existen rasgos físicos que determinen la criminalidad."},
+  {cat:"conceptos",q:"¿Quién propuso el atavismo biológico?",r:"Cesare Lombroso, médico y criminólogo italiano del siglo XIX.",e:"Lombroso creía que los criminales natos tenían rasgos 'primitivos' como frente hundida, pómulos salientes, etc."},
+  {cat:"conceptos",q:"¿Qué es antropología física forense?",r:"Rama de la antropología que aplica métodos antropológicos al contexto legal para identificación de restos óseos.",e:"Estudia huesos para determinar sexo, edad, estatura, ancestría y posibles traumas."},
+  {cat:"conceptos",q:"¿Qué es antropología biológica?",r:"Estudio de la variabilidad biológica humana, evolución y genética de las poblaciones.",e:"Se enfoca en la diversidad genética y adaptativa de los seres humanos."},
+  {cat:"conceptos",q:"¿Qué es antropología social?",r:"Estudio de las sociedades humanas, su cultura y organización social.",e:"Analiza costumbres, tradiciones y estructuras sociales de grupos humanos."},
+  {cat:"conceptos",q:"¿Qué es antropometría?",r:"Disciplina de la medición sistemática del cuerpo humano. Fundamental en el Bertillonaje.",e:"Incluye mediciones como estatura, envergadura, longitud de pies, manos, dedos, cabeza."},
+  {cat:"conceptos",q:"¿Cuáles son los 3 planos anatómicos?",r:"Sagital (divide en derecha e izquierda), Frontal o coronal (anterior y posterior), Transversal (superior e inferior).",e:"Nemotecnia: 'Sagital = Side (lados), Frontal = Frente, Transversal = a través'."},
+  {cat:"conceptos",q:"¿Qué es la posición anatómica?",r:"Cuerpo de pie, cabeza erecta, mirada al frente, brazos extendidos a los lados, palmas al frente, pies paralelos.",e:"Es la posición estándar para describir el cuerpo humano en anatomía."},
+  {cat:"conceptos",q:"¿Qué es SBSN-AFIS?",r:"Sistema Biométrico de Seguridad Nacional - Sistema Automatizado de Identificación de Huellas Dactilares.",e:"Se usa para identificación civil y criminal en Panamá. Busca por impresiones dactilares."},
+  {cat:"conceptos",q:"¿Qué es SVI?",r:"Sistema de Verificación del Tribunal Electoral. Sistema biométrico para verificar identidad de votantes.",e:"A diferencia de SBSN-AFIS (identificación nacional), el SVI es para procesos electorales."},
+  {cat:"conceptos",q:"¿Qué es biometría?",r:"Métodos tecnológicos que miden características biológicas o de comportamiento para identificación de personas.",e:"Ejemplos: huellas dactilares, reconocimiento facial, iris, voz, manos."},
+
+  // ===== 2. SISTEMAS DE IDENTIFICACIÓN (15) =====
+  {cat:"sistemas",q:"¿Qué es el Bertillonaje?",r:"Sistema antropométrico de identificación creado por Alphonse Bertillon en 1879. Se basa en tres componentes.",e:"Componentes: antropométrico (11 mediciones), descriptivo (rasgos físicos), marcas particulares (cicatrices, lunares, tatuajes)."},
+  {cat:"sistemas",q:"¿Quién creó el Bertillonaje?",r:"Alphonse Bertillon, oficial de policía francés, en 1879.",e:"Bertillon también creó el retrato hablado. Su sistema fue el primer método científico de identificación criminal."},
+  {cat:"sistemas",q:"¿Cuáles son los 3 componentes del Bertillonaje?",r:"1) Antropométrico (11 mediciones), 2) Descriptivo (rasgos físicos), 3) Marcas particulares (cicatrices, lunares, tatuajes).",e:"Fue el antecedente directo de los sistemas modernos de identificación."},
+  {cat:"sistemas",q:"¿Qué es SBSN-AFIS?",r:"Sistema Automatizado de Identificación de Huellas Dactilares para identificación civil y criminal a nivel nacional.",e:"SBSN = Sistema Biométrico de Seguridad Nacional. AFIS = Automated Fingerprint Identification System."},
+  {cat:"sistemas",q:"¿Qué es SVI y quién lo usa?",r:"Sistema de Verificación del Tribunal Electoral. Se usa para verificar identidad de votantes en procesos electorales.",e:"Diferencia clave: SBSN-AFIS es nacional; SVI es específico para elecciones."},
+  {cat:"sistemas",q:"Ventajas del ADN en identificación",r:"Máximo nivel de individualización (99.99%), se obtiene de restos mínimos, persiste en el tiempo, alta confiabilidad científica.",e:"El ADN es el estándar de oro pero es la última opción por su costo y tiempo."},
+  {cat:"sistemas",q:"Desventajas del ADN",r:"Costo elevado, requiere infraestructura especializada, demora en resultados, riesgo de contaminación.",e:"Por estas razones, el ADN se usa como último recurso cuando otros métodos fallan."},
+  {cat:"sistemas",q:"Propiedades de las huellas dactilares",r:"Únicas (diferentes en cada persona), Inmutables (no cambian con el tiempo), Perennes (permanecen toda la vida), Variadas.",e:"Son el método más usado por su bajo costo y rapidez. Clasificación: arco, presilla, verticilo, mixto."},
+  {cat:"sistemas",q:"¿Cuáles son los tipos de huellas dactilares?",r:"Arco, Presilla interna, Presilla externa, Verticilo y Mixto.",e:"Cada persona tiene un patrón único de crestas papilares en cada dedo."},
+  {cat:"sistemas",q:"¿Qué es la dactiloscopia?",r:"Estudio de las crestas papilares de los dedos para la identificación de personas.",e:"Es la ciencia más antigua y confiable de identificación biométrica."},
+  {cat:"sistemas",q:"¿Qué sistemas de identificación existen?",r:"ADN, Huellas dactilares, Iris, Manos (vasos capilares), Marcha, Escritura (grafística), Voz (acústica forense), Infrarrojo.",e:"Cada sistema tiene diferente costo, tiempo y precisión. ADN 99.99%, huellas 99.9%, iris 99.9%."},
+  {cat:"sistemas",q:"¿Cuál es el sistema más preciso?",r:"El ADN con 99.99% de precisión, seguido por huellas dactilares e iris con 99.9%.",e:"Sin embargo, el ADN es el más caro y lento. Las huellas son más prácticas para uso rutinario."},
+  {cat:"sistemas",q:"¿Qué es AFIS?",r:"Automated Fingerprint Identification System - Sistema Automatizado de Identificación de Huellas Dactilares.",e:"Programa computarizado que busca y compara huellas dactilares en bases de datos."},
+  {cat:"sistemas",q:"¿Qué diferencia hay entre SBSN-AFIS y SVI?",r:"SBSN-AFIS es para identificación nacional civil y criminal; SVI es del Tribunal Electoral para verificación de votantes.",e:"Ambos son sistemas biométricos pero con diferentes propósitos y autoridades."},
+  {cat:"sistemas",q:"¿Qué es el método antropométrico?",r:"Sistema de identificación basado en 11 mediciones del cuerpo humano, desarrollado por Bertillon.",e:"Mediciones incluían: estatura, envergadura, longitud de cabeza, pie, dedos, etc."},
+
+  // ===== 3. ESTUDIO FISIONÓMICO (20) =====
+  {cat:"fisionomico",q:"¿Cuáles son las condiciones de la posición anatómica?",r:"De pie, cabeza erecta (mirada al frente), brazos extendidos a los lados, palmas al frente (antebrazos en supinación), pies paralelos.",e:"Es la posición estándar para estudio fisionómico y anatomía."},
+  {cat:"fisionomico",q:"¿Cuáles son los 3 planos anatómicos?",r:"Plano sagital (derecha/izquierda), Plano frontal/coronal (anterior/posterior), Plano transversal (superior/inferior).",e:"Son referencias fundamentales para describir la ubicación de estructuras."},
+  {cat:"fisionomico",q:"¿Cuáles son los 3 tercios del rostro?",r:"Tercio superior (Triquion a Glabela), Tercio medio (Glabela a Sub-nasal), Tercio inferior (Sub-nasal a Gnation).",e:"División clásica para el análisis facial forense. Pregunta frecuente en exámenes."},
+  {cat:"fisionomico",q:"¿Qué es el Triquion (Tr)?",r:"Límite superior de la frente, donde comienza el nacimiento del cabello.",e:"Es el punto más alto del tercio superior facial. Referencia para líneas horizontales."},
+  {cat:"fisionomico",q:"¿Qué es la Glabela (G)?",r:"Prominencia del hueso frontal entre las cejas.",e:"Punto medio del tercio superior. También es un punto craneométrico importante."},
+  {cat:"fisionomico",q:"¿Qué es Sub-nasal (Sn)?",r:"Base de la nariz, punto inferior del tabique nasal.",e:"Marca el límite entre tercio medio y tercio inferior del rostro."},
+  {cat:"fisionomico",q:"¿Qué es Cheilon (Ch)?",r:"Comisura de los labios, punto donde se unen los labios superior e inferior.",e:"Referencia horizontal media del tercio inferior."},
+  {cat:"fisionomico",q:"¿Qué es Pogonion (Pg)?",r:"Prominencia del mentón, punto más anterior del mentón en la línea media.",e:"Junto con la Glabela define el plano facial. Indica si el perfil es recto, convexo o cóncavo."},
+  {cat:"fisionomico",q:"¿Qué es Gnation (Gn)?",r:"Punto más inferior del mentón en la línea media.",e:"Marca el límite inferior del tercio inferior del rostro."},
+  {cat:"fisionomico",q:"¿Qué es el plano facial?",r:"Línea recta que toca la Glabela y el Pogonion. En perfil normal están alineados.",e:"Desviaciones indican prognatismo (mandíbula hacia adelante) o retrognatismo (hacia atrás)."},
+  {cat:"fisionomico",q:"¿Qué es Vertex (V)?",r:"Punto más alto del cráneo en posición anatómica.",e:"Se usa para medir la estatura total de la cabeza."},
+  {cat:"fisionomico",q:"¿Qué es Nasion (N)?",r:"Punto de unión entre el hueso frontal y los huesos nasales.",e:"Referencia fundamental en craneometría y análisis facial."},
+  {cat:"fisionomico",q:"¿Qué es Exocantio (Ex)?",r:"Ángulo externo del ojo (comisura externa del párpado).",e:"Punto somatométrico para medir ancho facial y separación ocular."},
+  {cat:"fisionomico",q:"¿Qué es Endocantio (En)?",r:"Ángulo interno del ojo (comisura interna del párpado).",e:"Se usa para medir distancia intercantial y análisis de proporciones faciales."},
+  {cat:"fisionomico",q:"¿Qué es Zigion (Zy)?",r:"Punto más prominente del arco cigomático (pómulo).",e:"Mide el ancho máximo de la cara a nivel de los pómulos (diámetro bicigomático)."},
+  {cat:"fisionomico",q:"¿Qué es Gonio (Go)?",r:"Ángulo de la mandíbula, punto donde la rama se encuentra con el cuerpo mandibular.",e:"Referencia para determinar forma de la mandíbula (cuadrada, redondeada)."},
+  {cat:"fisionomico",q:"¿Qué elementos incluye la descripción física forense?",r:"Sexo, edad, estatura, complexión, deformaciones, forma de andar, tipo de habla, cara, nariz, ojos, boca, mentón, cicatrices, lunares, tatuajes.",e:"La descripción debe ser objetiva y evitativa de juicios estéticos."},
+  {cat:"fisionomico",q:"¿Qué es la ficha hematológica?",r:"Registro del grupo sanguíneo (A, B, AB, O) y factor Rh (+ o -).",e:"Útil para descartar sospechosos, no para individualizar. Es identificación presuntiva."},
+  {cat:"fisionomico",q:"¿Cuáles son los 3 tipos de planos que dividen el cuerpo?",r:"Sagital (vertical, divide en izquierda/derecha), Coronal (vertical, divide en frontal/posterior), Transversal (horizontal, divide en superior/inferior).",e:"El plano sagital medio divide en dos mitades simétricas."},
+  {cat:"fisionomico",q:"¿Qué son los puntos somatométricos?",r:"Puntos de referencia anatómicos estandarizados para realizar mediciones precisas del cuerpo humano.",e:"Ejemplos: Vertex, Nasion, Glabela, Sub-nasal, Pogonion, Gnation, Exocantio, Endocantio, Zigion, Gonio."},
+
+  // ===== 4. SOMATOTIPOS (15) =====
+  {cat:"somatotipos",q:"¿Cuáles son los 4 biotipos de Kretschmer?",r:"Leptosomático/Asténico, Atlético/Epileptoide, Pícnico/Ciclotímico, Displástico.",e:"Nemotecnia LAPD: 'Los Atletas Pueden Disparar'. Kretschmer los asociaba con trastornos psiquiátricos."},
+  {cat:"somatotipos",q:"¿Cómo es el tipo Leptosomático?",r:"Delgado, hombros estrechos, tórax aplanado. Temperamento introvertido, sensible, inclinación al arte.",e:"Predisposición según Kretschmer: esquizofrenia. También llamado asténico."},
+  {cat:"somatotipos",q:"¿Cómo es el tipo Atlético?",r:"Musculoso, huesos grandes, estructura fuerte. Temperamento enérgico, apasionado, explosivo.",e:"Predisposición: epilepsia. También llamado epileptoide."},
+  {cat:"somatotipos",q:"¿Cómo es el tipo Pícnico?",r:"Robusto, redondeado, abdomen prominente. Temperamento sociable, risueño, con oscilaciones anímicas.",e:"Predisposición: trastorno bipolar (ciclotimia). También llamado ciclotímico."},
+  {cat:"somatotipos",q:"¿Cómo es el tipo Displástico?",r:"Cuerpo desproporcionado, no clasificable en las otras categorías. Temperamento variable.",e:"Incluye casos atípicos o deformidades que no encajan en los otros 3 tipos."},
+  {cat:"somatotipos",q:"¿Cuáles son los 3 somatotipos de Sheldon?",r:"Endomorfo (adiposo), Mesomorfo (musculoso), Ectomorfo (delgado).",e:"Sheldon usa 3 componentes combinables en proporciones numéricas (1-7). Más flexible que Kretschmer."},
+  {cat:"somatotipos",q:"¿Cómo es el Endomorfo según Sheldon?",r:"Predominio de tejido adiposo, cuerpo blando y redondeado. Temperamento viscerotónico: relajado, sociable, amante de la comodidad.",e:"Asociado con el tipo pícnico de Kretschmer."},
+  {cat:"somatotipos",q:"¿Cómo es el Mesomorfo según Sheldon?",r:"Predominio de músculo y hueso, cuerpo atlético. Temperamento somatotónico: enérgico, competitivo, activo.",e:"Asociado con el tipo atlético de Kretschmer."},
+  {cat:"somatotipos",q:"¿Cómo es el Ectomorfo según Sheldon?",r:"Predominio de delgadez, extremidades largas. Temperamento cerebrotonónico: introvertido, sensible, intelectual.",e:"Asociado con el tipo leptosomático de Kretschmer."},
+  {cat:"somatotipos",q:"Diferencia clave entre Kretschmer y Sheldon",r:"Kretschmer: 4 categorías fijas con asociaciones psiquiátricas. Sheldon: 3 componentes combinables en proporciones numéricas.",e:"Sheldon es más flexible porque permite puntuaciones intermedias (ej: 4-4-3)."},
+  {cat:"somatotipos",q:"Antecedentes históricos de los biotipos",r:"Hipócrates (4 humores), Galeno (vinculó humores con tipos corporales), Leonardo da Vinci (Hombre de Vitruvio), Escuela Italiana (Lombroso, Ferri, Garofalo).",e:"La relación entre físico y conducta tiene raíces antiguas pero actualmente es controversial."},
+  {cat:"somatotipos",q:"¿Qué propuso Hipócrates?",r:"Teoría de los cuatro humores: sangre, flema, bilis amarilla y bilis negra.",e:"Primer intento de clasificar temperamentos según fluidos corporales."},
+  {cat:"somatotipos",q:"¿Qué vinculación hizo Galeno?",r:"Vinculó los cuatro humores de Hipócrates con tipos corporales específicos.",e:"Sentó las bases de la teoría de los temperamentos (sanguíneo, flemático, colérico, melancólico)."},
+  {cat:"somatotipos",q:"¿Qué aportó Leonardo da Vinci?",r:"El Hombre de Vitruvio, estudio de las proporciones humanas ideales basado en Vitruvio.",e:"Estableció cánones de proporción que influyeron en la antropometría."},
+  {cat:"somatotipos",q:"¿Qué propuso la Escuela Italiana?",r:"Lombroso, Ferri y Garofalo propusieron una relación entre características físicas y conducta criminal.",e:"Hoy descartada. El atavismo biológico de Lombroso fue refutado científicamente."},
+
+  // ===== 5. ANATOMÍA DEL CRÁNEO (15) =====
+  {cat:"craneo",q:"¿Cuántos huesos tiene el neurocráneo?",r:"8 huesos: Frontal (1), Parietales (2), Temporales (2), Occipital (1), Esfenoides (1), Etmoides (1).",e:"El neurocráneo protege el encéfalo. Nemotecnia: FrPaTeOcEsEt."},
+  {cat:"craneo",q:"¿Cuántos huesos tiene el viscerocráneo?",r:"14 huesos: Nasales (2), Cigomáticos (2), Maxilares superiores (2), Mandíbula (1), Lagrimales (2), Palatinos (2), Cornetes nasales inferiores (2), Vómer (1).",e:"Forma la cara. Nemotecnia: NaCiMaMaLaPaCoVó."},
+  {cat:"craneo",q:"Función del hueso Frontal",r:"Forma la frente y el techo de las órbitas oculares. Es un hueso del neurocráneo.",e:"Contiene los senos frontales y las crestas superciliares."},
+  {cat:"craneo",q:"Función del hueso Parietal",r:"Forma la bóveda craneal: lados y techo del cráneo. Son 2 (par).",e:"Se articula con el frontal, temporal, occipital y esfenoides."},
+  {cat:"craneo",q:"Función del hueso Temporal",r:"Contiene el oído interno y la apófisis mastoides. Son 2.",e:"Protege las estructuras auditivas y participa en la articulación temporomandibular (ATM)."},
+  {cat:"craneo",q:"Función del hueso Occipital",r:"Base posterior del cráneo. Contiene el agujero magno (foramen magnum).",e:"El agujero magno permite el paso de la médula espinal hacia la columna vertebral."},
+  {cat:"craneo",q:"Función del hueso Esfenoides",r:"Conecta con todos los demás huesos del cráneo. Contiene la silla turca (alberga la hipófisis).",e:"Tiene forma de mariposa o murciélago. Es clave en la base del cráneo."},
+  {cat:"craneo",q:"Función del hueso Etmoides",r:"Forma parte de las órbitas y la cavidad nasal. Contiene la lámina cribosa.",e:"La lámina cribosa permite el paso de los nervios olfatorios."},
+  {cat:"craneo",q:"Función de los huesos Nasales",r:"Forman el puente de la nariz. Son 2.",e:"Los huesos nasales son los que más frecuentemente se fracturan en traumatismos faciales."},
+  {cat:"craneo",q:"Función de los huesos Cigomáticos",r:"Forman los pómulos o mejillas. Son 2.",e:"Punto somatométrico Zigion (Zy) se mide en el arco cigomático."},
+  {cat:"craneo",q:"Función de la Mandíbula",r:"Único hueso móvil del cráneo. Contiene los dientes inferiores. Articulación temporomandibular (ATM).",e:"Permite la masticación y el habla. Es el hueso más fuerte del cráneo."},
+  {cat:"craneo",q:"¿Cómo se determina el sexo por el cráneo?",r:"Masculino: más robusto, arcos superciliares prominentes, mentón cuadrado. Femenino: más suave, mentón redondeado.",e:"Es un método de identificación presuntivo, no concluyente."},
+  {cat:"craneo",q:"¿Cómo se determina la edad por el cráneo?",r:"Evaluando el cierre de suturas craneales, erupción dental y desgaste de dientes.",e:"Las suturas se cierran con la edad (sinostosis). Los dientes también dan indicios de edad."},
+  {cat:"craneo",q:"¿Qué es la identificación dental?",r:"Uso de registros dentales (radiografías, historias clínicas) para identificar personas por sus dientes.",e:"Los dientes son la estructura más resistente del cuerpo. Únicos para cada persona."},
+  {cat:"craneo",q:"¿Qué hueso contiene la silla turca?",r:"El esfenoides. La silla turca alberga la glándula hipófisis (pituitaria).",e:"Es una estructura ósea en forma de silla de montar en la base del cráneo."},
+
+  // ===== 6. ANÁLISIS FACIAL FORENSE (15) =====
+  {cat:"facial",q:"¿Qué es el efecto cojín?",r:"Distorsión donde las líneas rectas se curvan hacia adentro. Causada por lente telefoto (zoom).",e:"También llamado 'pincushion distortion'. Ocurre cuando se usa mucho zoom."},
+  {cat:"facial",q:"¿Qué es el efecto barril?",r:"Distorsión donde las líneas rectas se curvan hacia afuera. Causada por lente gran angular.",e:"También llamado 'barrel distortion'. Común en cámaras de seguridad y celulares."},
+  {cat:"facial",q:"¿Qué lente produce una imagen sin distorsión?",r:"El lente estándar de 50mm produce líneas rectas sin distorsión aparente.",e:"Considerado el lente 'normal' porque se aproxima a la visión humana."},
+  {cat:"facial",q:"¿Qué es la distorsión de perspectiva?",r:"Alteración de las proporciones faciales causada por la distancia entre la cámara y el rostro y el ángulo de toma.",e:"Ejemplo: nariz más grande si la foto se toma muy cerca (selfie)."},
+  {cat:"facial",q:"Pasos del análisis morfocomparativo",r:"1) Selección/preparación de imágenes, 2) Identificación de landmarks faciales, 3) Medición de distancias/ángulos/proporciones, 4) Comparación, 5) Evaluación, 6) Informe pericial.",e:"Método científico para comparar dos o más rostros en imágenes."},
+  {cat:"facial",q:"¿Qué es cotejo facial?",r:"Comparación detallada de características faciales con mediciones precisas entre dos o más imágenes.",e:"Se usan puntos somatométricos como Nasion, Exocantio, Sub-nasal, Pogonion."},
+  {cat:"facial",q:"¿Qué es superposición cráneo-facial?",r:"Técnica que superpone una imagen del cráneo con una fotografía del rostro para determinar compatibilidad.",e:"Usada cuando se encuentra un cráneo y se tiene una foto de la persona desaparecida."},
+  {cat:"facial",q:"¿Qué es reconstrucción facial?",r:"Técnica que recrea el rostro de una persona a partir de su cráneo usando marcadores de tejido blando.",e:"Se colocan marcadores de grosor de tejido en puntos específicos del cráneo."},
+  {cat:"facial",q:"Desafíos del reconocimiento facial",r:"Envejecimiento (arrugas, flacidez), cicatrices/marcas (aparecen/desaparecen), tatuajes (se modifican/cubren), baja calidad de imagen.",e:"El análisis facial es identificación presuntiva, no concluyente como ADN o huellas."},
+  {cat:"facial",q:"¿Qué es un landmark facial?",r:"Punto de referencia anatómico en el rostro usado para mediciones y comparaciones forenses.",e:"Ejemplos: Glabela, Nasion, Sub-nasal, Pogonion, Exocantio, Endocantio."},
+  {cat:"facial",q:"¿Qué distancia focal produce distorsión de barril?",r:"Lentes gran angular (menos de 35mm aproximadamente) producen distorsión de barril.",e:"Cuanto más gran angular, mayor la curvatura hacia afuera."},
+  {cat:"facial",q:"¿Qué distancia focal produce distorsión de cojín?",r:"Lentes telefoto (más de 70mm aproximadamente) producen distorsión de cojín.",e:"Cuanto más zoom, mayor la curvatura hacia adentro."},
+  {cat:"facial",q:"Historia del reconocimiento facial forense",r:"Primer intento documentado en 1871 con fotografías de prisioneros. Evolucionó con la fotografía y luego con sistemas computarizados.",e:"Hoy se usa software de reconocimiento facial automatizado pero siempre con verificación humana."},
+  {cat:"facial",q:"¿Qué características faciales son individualizantes?",r:"Proporciones faciales, ojos (forma, color, disposición), nariz (forma, tamaño), boca, orejas, cicatrices, lunares, tatuajes.",e:"La combinación de estas características puede hacer única a una persona."},
+  {cat:"facial",q:"¿Por qué el análisis facial es presuntivo?",r:"Porque las características faciales pueden cambiar con el tiempo (edad, peso, cirugías) y las imágenes pueden tener distorsiones.",e:"Solo métodos como ADN y huellas dactilares proporcionan identificación concluyente."},
+
+  // ===== 7. ACTOS DE RECONOCIMIENTO (25) =====
+  {cat:"reconocimiento",q:"¿Qué establece el Art. 326 CPP?",r:"El reconocimiento como acto de investigación dentro del proceso penal.",e:"Regula cómo se debe realizar el reconocimiento de personas durante la investigación."},
+  {cat:"reconocimiento",q:"¿Qué establece el Art. 327 CPP?",r:"Interrogatorio previo al reconocedor. No mostrar imágenes del sospechoso antes del reconocimiento.",e:"El reconocedor debe describir primero, sin contaminación visual previa."},
+  {cat:"reconocimiento",q:"¿Qué establece el Art. 328 CPP?",r:"Mínimo 6 personas con rasgos similares al sujeto investigado para la rueda de detenidos.",e:"Todas las personas deben tener características físicas comparables."},
+  {cat:"reconocimiento",q:"¿Qué establece el Art. 329 CPP?",r:"Reconocimiento múltiple: cada reconocedor debe hacer el reconocimiento por separado, sin comunicación entre ellos.",e:"Evita que un reconocedor influencie a otro."},
+  {cat:"reconocimiento",q:"¿Qué establece el Art. 330 CPP?",r:"Reconocimiento fotográfico: mínimo 10 fotografías, incluyendo al imputado y 9 personas de rasgos similares.",e:"También llamado 'carpeta'. A diferencia del libro/álbum (archivo sin sospechoso)."},
+  {cat:"reconocimiento",q:"¿Qué dice el Art. 385 CP?",r:"Falso testimonio: prisión de 2 a 4 años. Si afecta una sentencia condenatoria: 4 a 8 años.",e:"Se lee al reconocedor antes de iniciar el acto para advertirle de las consecuencias."},
+  {cat:"reconocimiento",q:"Características de la rueda de detenidos",r:"Mínimo 6 personas, rasgos parecidos, colocación numerada en línea, reconocedor desde lugar oculto (cámara Gesell), presencia del defensor.",e:"Se instruye que la persona puede no estar presente. Todo se registra en acta."},
+  {cat:"reconocimiento",q:"¿Qué es la cámara Gesell?",r:"Lugar oculto desde donde el reconocedor observa la rueda de detenidos sin ser visto por el investigado.",e:"También conocido como espejo unidireccional. Permite observación segura."},
+  {cat:"reconocimiento",q:"Diferencia entre libro de fotografías y carpeta",r:"Libro/álbum: sin indicios de identidad, fotos de archivo. Carpeta: hay persona investigada, 10 fotos (imputado + 9 similares).",e:"En carpeta se notifica al defensor; en libro no es necesaria la notificación."},
+  {cat:"reconocimiento",q:"¿Quiénes participan en un acto de reconocimiento?",r:"Reconocedor, sujeto investigado, abogado defensor, perito, fiscal, tutor/curador (menores), traductor (si aplica), custodio.",e:"Cada participante tiene un rol específico. La presencia del defensor es obligatoria."},
+  {cat:"reconocimiento",q:"¿Qué debe hacer el perito antes del reconocimiento?",r:"Interrogar al reconocedor sobre las circunstancias del hecho, la descripción del sospechoso y las condiciones de observación.",e:"No debe mostrar imágenes previas del sospechoso (Art. 327 CPP)."},
+  {cat:"reconocimiento",q:"Pasos del reconocimiento fotográfico",r:"1) Lectura de derechos (Art. 385 CP), 2) Preguntas al reconocedor, 3) Presentación de carpeta, 4) Objeciones de la defensa, 5) Declaración, 6) Cierre de acta, 7) Informe pericial.",e:"Todo el procedimiento se documenta en un acta oficial."},
+  {cat:"reconocimiento",q:"¿Qué debe contener el acta de reconocimiento?",r:"Fecha, lugar, participantes, instrucciones dadas, descripción previa del reconocedor, resultado, objeciones, firma de todos.",e:"Es un documento legal que puede ser impugnado si no cumple con los requisitos."},
+  {cat:"reconocimiento",q:"¿Qué pasa si la defensa objeta durante el reconocimiento?",r:"La objeción se registra en el acta y el acto puede suspenderse o continuar según decisión del fiscal.",e:"Las objeciones comunes incluyen diferencias notorias entre los participantes."},
+  {cat:"reconocimiento",q:"¿Cuántas personas mínimo para rueda de detenidos?",r:"6 personas según el Art. 328 CPP, con rasgos físicos similares al investigado.",e:"Todos deben tener características comparables: estatura, complexión, edad, color de piel."},
+  {cat:"reconocimiento",q:"¿Cuántas fotografías mínimo para reconocimiento fotográfico?",r:"10 fotografías según el Art. 330 CPP: el imputado más 9 personas de rasgos similares.",e:"Las 9 adicionales son 'distractores' o 'relleno' para no sesgar al reconocedor."},
+  {cat:"reconocimiento",q:"¿Qué diferencia hay entre rueda y reconocimiento fotográfico?",r:"Rueda: 6 personas en vivo, desde lugar oculto (Art. 328). Fotográfico: 10 fotos en carpeta (Art. 330).",e:"La rueda requiere que el defensor esté presente y que el reconocedor observe sin ser visto."},
+  {cat:"reconocimiento",q:"¿Qué es el reconocimiento múltiple?",r:"Cuando hay varios reconocedores, cada uno realiza el acto por separado sin comunicación entre ellos (Art. 329 CPP).",e:"Evita la contaminación del testimonio y la influencia entre testigos."},
+  {cat:"reconocimiento",q:"¿Qué instrucción se da al reconocedor?",r:"Se le informa que la persona puede estar o no presente, que no debe sentirse presionado y que las consecuencias del falso testimonio (Art. 385 CP).",e:"Es fundamental para la validez del acto."},
+  {cat:"reconocimiento",q:"¿Qué es el libro o álbum de fotografías?",r:"Conjunto de fotos de archivo que se muestra a la víctima cuando no hay un sospechoso identificado.",e:"No requiere notificación al defensor. La víctima busca en el archivo."},
+  {cat:"reconocimiento",q:"¿Qué es la carpeta de reconocimiento?",r:"Conjunto de 10 fotografías donde una corresponde al imputado y 9 a personas con rasgos similares.",e:"Se usa cuando ya hay un sospechoso identificado. Requiere notificación al defensor."},
+  {cat:"reconocimiento",q:"¿Qué error frecuente vicia el reconocimiento?",r:"Mostrar solo la foto del sospechoso sin distractores, o mostrar imágenes previas al reconocedor.",e:"Esto contamina el testimonio y puede anular el acto."},
+  {cat:"reconocimiento",q:"¿Qué condiciones debe tener el lugar de la rueda?",r:"Iluminación adecuada, espacio suficiente, lugar oculto para el reconocedor (cámara Gesell), numeración visible.",e:"El reconocedor observa desde un lugar donde no sea visto por los participantes."},
+  {cat:"reconocimiento",q:"¿Qué es la lectura de derechos?",r:"Se advierte al reconocedor sobre el delito de falso testimonio (Art. 385 CP) y las consecuencias penales.",e:"Prisión 2-4 años por falso testimonio; 4-8 si afecta sentencia condenatoria."},
+  {cat:"reconocimiento",q:"¿Quién presencia la rueda de detenidos?",r:"Fiscal, perito, abogado defensor del investigado, reconocedor (desde lugar oculto), custodio, y el investigado entre los 6 participantes.",e:"Pueden estar también tutor/curador (menores) y traductor si es necesario."},
+
+  // ===== 8. RETRATO HABLADO (15) =====
+  {cat:"retrato",q:"¿Qué es el retrato hablado?",r:"Técnica de identificación forense que reconstruye gráficamente el rostro de una persona buscada a partir de la descripción verbal de testigos.",e:"Es identificación presuntiva, no concluyente. Creado por Alphonse Bertillon."},
+  {cat:"retrato",q:"Fundamento legal del retrato hablado",r:"Sección 3.8 del Directorio de Servicios Periciales, Ley 50, Artículo 410 CPP (informe pericial).",e:"El Art. 410 CPP regula la presentación de informes periciales en el proceso penal."},
+  {cat:"retrato",q:"¿Cuáles son las 5 partes principales del retrato hablado?",r:"1) Ojos (forma, tamaño, separación, color), 2) Nariz (forma, tamaño, ancho), 3) Boca (tamaño, grosor de labios), 4) Forma de la cabeza (ovalada, redonda, cuadrada), 5) Forma del mentón (prominente, huidizo, partido).",e:"Nemotecnia: ONBCB (Ojos, Nariz, Boca, Cabeza, Barbilla/Mentón)."},
+  {cat:"retrato",q:"Tipos de testigos según la edad",r:"Pre-adolescentes (10-12 años): buena memoria visual, lenguaje sencillo. Adolescentes (13-17): excelentes descriptores. Adultos mayores (65+): dificultad, requieren paciencia.",e:"Cada grupo etario requiere un enfoque diferente en la entrevista."},
+  {cat:"retrato",q:"¿Cómo se trabaja con un testigo hostil?",r:"Requiere ambiente seguro, apoyo psicológico. Son testigos de delitos traumáticos con posibles bloqueos.",e:"El rapport es fundamental. Se debe establecer confianza antes de la entrevista."},
+  {cat:"retrato",q:"¿Qué es el rapport en retrato hablado?",r:"Técnica de establecer confianza y empatía entre el perito y el testigo para facilitar la comunicación.",e:"Es el primer paso del procedimiento. Sin rapport, la calidad de la descripción disminuye."},
+  {cat:"retrato",q:"Tipos de preguntas en la entrevista",r:"Cerradas (respuesta limitada: sí/no), Abiertas (respuesta libre), Hipotéticas (escenarios imaginarios).",e:"Las preguntas abiertas son las más útiles. Las cerradas se usan para confirmar detalles."},
+  {cat:"retrato",q:"¿Qué información se indaga en la entrevista previa?",r:"Circunstancias del avistamiento: distancia, iluminación, tiempo de observación, condiciones atmosféricas, estado emocional del testigo.",e:"Estos factores afectan la calidad de la descripción y deben evaluarse."},
+  {cat:"retrato",q:"¿Qué tipo de testigo es el testigo de vista?",r:"Persona que presenció directamente el delito. Se deben verificar las condiciones de observación.",e:"No es lo mismo ver a alguien de lejos, de noche, que de cerca y con buena luz."},
+  {cat:"retrato",q:"Procedimiento básico del retrato hablado",r:"1) Entrevista previa (rapport + condiciones), 2) Descripción de las 5 partes, 3) Selección de rasgos en catálogo, 4) Reconstrucción gráfica, 5) Verificación con el testigo.",e:"Se usan catálogos de rasgos faciales o software especializado."},
+  {cat:"retrato",q:"¿Qué recomendaciones hay para testigos adolescentes?",r:"Establecer confianza, usar lenguaje apropiado a su edad, no juzgar, permitir que hablen libremente.",e:"Los adolescentes suelen ser excelentes descriptores si se sienten cómodos."},
+  {cat:"retrato",q:"¿Qué recomendaciones hay para adultos mayores?",r:"Paciencia, preguntas simples, dar tiempo para responder, evitar fatiga, verificar audición y visión.",e:"Pueden tener dificultad para describir pero buena memoria de eventos pasados."},
+  {cat:"retrato",q:"¿Cuál es la diferencia entre retrato hablado y fotografía?",r:"El retrato hablado es una reconstrucción basada en descripción verbal (presuntivo). La fotografía es un registro directo de la apariencia.",e:"El retrato hablado se usa cuando no hay fotografía o imagen del sospechoso."},
+  {cat:"retrato",q:"¿Qué es un catálogo de rasgos?",r:"Conjunto de ilustraciones de diferentes tipos de ojos, narices, bocas, cabezas y mentones usados en retrato hablado.",e:"El testigo selecciona los rasgos que más se aproximan a la persona que vio."},
+  {cat:"retrato",q:"¿El retrato hablado es concluyente?",r:"No, es identificación presuntiva. Sirve como guía para la investigación, no como prueba concluyente.",e:"Nunca debe usarse como única prueba para identificar a un acusado."},
+
+  // ===== 9. PABELLÓN AURICULAR (20) =====
+  {cat:"oreja",q:"¿Cuáles son las 6 estructuras principales del pabellón auricular?",r:"Hélix, Antihélix, Trago, Antitrago, Lóbulo, Concha.",e:"Nemotecnia: HATALC (Hélix, Antihélix, Trago, Antitrago, Lóbulo, Concha)."},
+  {cat:"oreja",q:"¿Qué es el Hélix?",r:"Reborde cartilaginoso externo del pabellón auricular. Tiene raíz, cola y canal.",e:"Es el borde externo de la oreja, visible desde el frente."},
+  {cat:"oreja",q:"¿Qué es el Antihélix?",r:"Reborde cartilaginoso interno de la oreja, paralelo al hélix. Tiene 2 ramas y la fosa escafoidea.",e:"La fosa escafoidea es la depresión entre hélix y antihélix."},
+  {cat:"oreja",q:"¿Qué es el Trago?",r:"Proyección cartilaginosa del pabellón auricular frente al conducto auditivo externo.",e:"Es la pequeña protuberancia que cubre la entrada del oído."},
+  {cat:"oreja",q:"¿Qué es el Antitrago?",r:"Proyección cartilaginosa del pabellón auricular ubicada frente al trago, sobre el lóbulo.",e:"Junto con el trago, forma parte de la 'entrada' al oído."},
+  {cat:"oreja",q:"¿Qué es el Lóbulo?",r:"Parte inferior y blanda de la oreja. Mide aproximadamente 10-12 mm. Puede ser libre o adherido.",e:"Es la única parte sin cartílago. Usado para aretes. Variable entre personas."},
+  {cat:"oreja",q:"¿Qué es la Concha auricular?",r:"Depresión central del pabellón auricular que conduce al conducto auditivo externo.",e:"Es la parte más profunda de la oreja, como un embudo hacia el oído."},
+  {cat:"oreja",q:"¿Qué aportó Bertillon al estudio de la oreja?",r:"Incluyó las mediciones de la oreja en su sistema antropométrico (Bertillonaje) por ser única en cada persona.",e:"Bertillon fue pionero en reconocer el valor identificatorio de la oreja."},
+  {cat:"oreja",q:"¿Qué aportó Frigerio (1888)?",r:"Desarrolló la otometría y el otómetro para medir el ángulo aurículo-temporal del pabellón auricular.",e:"Frigerio sistematizó las mediciones de la oreja para identificación."},
+  {cat:"oreja",q:"¿Qué es el otograma?",r:"Reproducción bidimensional del pabellón auricular para su estudio y comparación forense.",e:"Se obtiene por fotografía, impresión o escaneo de la oreja."},
+  {cat:"oreja",q:"¿Qué son las huellas latentes de oreja?",r:"Restos de piel, sudor y grasa que quedan al apoyar la oreja en una superficie como puertas o ventanas.",e:"Se revelan con métodos similares a las huellas dactilares."},
+  {cat:"oreja",q:"Reveladores de huellas de oreja",r:"Físicos: polvos, cianoacrilato (super glue). Químicos: ninhidrina, DFO.",e:"Los mismos reveladores usados para huellas dactilares sirven para huellas de oreja."},
+  {cat:"oreja",q:"Técnica de comparación por yuxtaposición",r:"Colocar los dos otogramas lado a lado para comparar visualmente las estructuras.",e:"Es la técnica más simple y rápida pero menos objetiva."},
+  {cat:"oreja",q:"Técnica de comparación por disección",r:"Cortar cada otograma en 4 partes e intercambiar las mitades para ver si coinciden.",e:"Técnica más objetiva que la yuxtaposición simple."},
+  {cat:"oreja",q:"Técnica de comparación por superposición",r:"Superponer los otogramas usando acetato transparente o software especializado.",e:"Es la técnica de mayor precisión. Permite ver diferencias milimétricas."},
+  {cat:"oreja",q:"¿Por qué la oreja es útil para identificación?",r:"Es única para cada persona, incluso en gemelos idénticos. No cambia significativamente con la edad.",e:"Su estructura cartilaginosa permanece estable, excepto el lóbulo que puede elongarse."},
+  {cat:"oreja",q:"¿Qué es la fosa escafoidea?",r:"Depresión alargada entre el hélix y el antihélix del pabellón auricular.",e:"También llamada 'barco' por su forma de nave."},
+  {cat:"oreja",q:"¿Cómo se obtiene un otograma de una escena del crimen?",r:"Se fotografía la huella de oreja con escala, se revela si es latente, y se compara con el otograma del sospechoso.",e:"Se usan las técnicas de yuxtaposición, disección o superposición."},
+  {cat:"oreja",q:"¿El lóbulo puede ser libre o adherido?",r:"Sí, el lóbulo puede ser libre (separado de la mejilla) o adherido (pegado a la mejilla).",e:"Es una característica hereditaria útil para identificación."},
+  {cat:"oreja",q:"¿Qué caso es famoso por identificación por oreja?",r:"Casos de huellas de oreja en puertas de viviendas robadas. La oreja se apoya al escuchar detrás de la puerta.",e:"El otograma se compara mediante yuxtaposición y superposición."},
+
+  // ===== 10. OTROS SISTEMAS (15) =====
+  {cat:"otros",q:"¿Por qué el iris es útil para identificación?",r:"Estructura única del iris (criptas, surcos, anillos). Lectores biométricos rápidos y no invasivos.",e:"Alta precisión (99.9%), rápido y no requiere contacto físico."},
+  {cat:"otros",q:"¿Qué es la identificación por manos?",r:"Se basa en la red vascular de las manos: patrón único de capilares, venas y arterias.",e:"Tecnología aún en investigación. Se usa en algunos sistemas de seguridad."},
+  {cat:"otros",q:"¿Qué es la identificación por marcha?",r:"Análisis de la forma de caminar o correr de una persona como método de identificación.",e:"Útil cuando el rostro no es visible. Precisión moderada. Ayuda a descartar sospechosos."},
+  {cat:"otros",q:"Caso Adeline (identificación por marcha)",r:"Niña desaparecida en Panamá. Cámaras captaron a una persona llevándola sin rostro visible. Se analizó la forma de caminar.",e:"La identificación por marcha ayudó a descartar sospechosos."},
+  {cat:"otros",q:"¿Qué es la grafística o grafología forense?",r:"Estudio de la escritura para identificación de autoría. 'El cerebro escribe, la mano es el instrumento'.",e:"No se puede disimular completamente la escritura. Precisión moderada-alta."},
+  {cat:"otros",q:"¿Qué es la acústica forense?",r:"Rama de la criminalística que estudia el sonido como evidencia, incluyendo identificación de voces.",e:"Hombres: 60-120 Hz, Mujeres: 120-250 Hz. Buena aceptación científica."},
+  {cat:"otros",q:"¿Qué es la identificación por infrarrojo?",r:"Uso de luz infrarroja para visualizar el patrón de venas y arterias debajo de la piel.",e:"Red vascular única. En investigación avanzada. Alto costo."},
+  {cat:"otros",q:"¿Qué sistemas están en desarrollo o investigación?",r:"Identificación por manos (vasos capilares) e identificación por infrarrojo (venas).",e:"Ambos tienen alto costo y aún no están completamente implementados."},
+  {cat:"otros",q:"¿Qué sistema tiene el costo más bajo?",r:"Las huellas dactilares, seguidas por la escritura.",e:"Las huellas son el método más usado por su bajo costo y rapidez."},
+  {cat:"otros",q:"¿Qué sistema es el más rápido?",r:"Huellas dactilares e iris, ambos rápidos y no invasivos.",e:"El ADN es el más lento porque requiere procesamiento de laboratorio."},
+  {cat:"otros",q:"¿Qué sistemas tienen precisión moderada?",r:"Marcha (moderada), Escritura (moderada-alta), Voz (moderada-alta).",e:"Ninguno alcanza el 99.9% de ADN, huellas o iris."},
+  {cat:"otros",q:"¿Qué frecuencia de voz tienen los hombres?",r:"Entre 60 y 120 Hz. Las mujeres entre 120 y 250 Hz.",e:"La frecuencia fundamental de la voz es un parámetro importante en acústica forense."},
+  {cat:"otros",q:"Principio de la grafística",r:"'El cerebro escribe, la mano es el instrumento'. La escritura refleja patrones cerebrales únicos.",e:"No se puede disimular completamente la escritura propia."},
+  {cat:"otros",q:"¿Qué características del iris se analizan?",r:"Criptas, surcos, anillos, color y patrón estromal del iris.",e:"El iris se forma antes del nacimiento y permanece estable toda la vida."},
+  {cat:"otros",q:"¿Cuándo se usa la identificación por marcha?",r:"Cuando el rostro no es visible en las cámaras de seguridad pero se puede observar el patrón de caminar.",e:"Precisión moderada. Útil para descartar sospechosos, no para identificar con certeza."},
+
+  // ===== 11. ARTÍCULOS Y CÓDIGOS (15) =====
+  {cat:"articulos",q:"Art. 326 CPP",r:"El reconocimiento como acto de investigación dentro del proceso penal.",e:"Establece el marco general para los actos de reconocimiento de personas."},
+  {cat:"articulos",q:"Art. 327 CPP",r:"Interrogatorio previo al reconocedor. Prohibición de mostrar imágenes del sospechoso antes del acto.",e:"Garantiza que la descripción sea espontánea y no contaminada."},
+  {cat:"articulos",q:"Art. 328 CPP",r:"Mínimo 6 personas con rasgos similares al investigado para la rueda de detenidos.",e:"Todas las personas deben tener características físicas comparables."},
+  {cat:"articulos",q:"Art. 329 CPP",r:"Reconocimiento múltiple: cada reconocedor por separado, sin comunicación entre sí.",e:"Evita la contaminación del testimonio entre reconocedores."},
+  {cat:"articulos",q:"Art. 330 CPP",r:"Reconocimiento fotográfico: mínimo 10 fotografías (imputado + 9 similares).",e:"Las 9 adicionales son distractores para no sesgar al reconocedor."},
+  {cat:"articulos",q:"Art. 385 CP",r:"Falso testimonio: prisión 2-4 años. Si afecta sentencia condenatoria: 4-8 años.",e:"Se lee al reconocedor antes del acto como advertencia."},
+  {cat:"articulos",q:"Art. 410 CPP",r:"Regula la presentación de informes periciales en el proceso penal.",e:"Los informes deben ser claros, objetivos y fundamentados científicamente."},
+  {cat:"articulos",q:"Ley 50",r:"Ley que regula los servicios periciales y la función de los peritos en el sistema de justicia.",e:"Fundamento legal del retrato hablado y otras pericias de identificación."},
+  {cat:"articulos",q:"Art. 385 CP: penas",r:"Falso testimonio simple: 2-4 años de prisión. Falso testimonio que afecta sentencia: 4-8 años.",e:"La gravedad aumenta si la mentira afecta el resultado del juicio."},
+  {cat:"articulos",q:"¿Qué artículos regulan el reconocimiento de personas?",r:"Arts. 326, 327, 328, 329 y 330 del Código Procesal Penal (CPP).",e:"Son 5 artículos que regulan todo el procedimiento de reconocimiento."},
+  {cat:"articulos",q:"¿Cuál es la diferencia entre Art. 328 y Art. 330 CPP?",r:"Art. 328: rueda de detenidos (6 personas en vivo). Art. 330: reconocimiento fotográfico (10 fotografías).",e:"Ambos requieren personas/fotos de rasgos similares al investigado."},
+  {cat:"articulos",q:"¿Qué artículo prohíbe mostrar imágenes previas?",r:"Art. 327 CPP: establece interrogatorio previo sin mostrar imágenes del sospechoso.",e:"La contaminación visual previa vicia el reconocimiento."},
+  {cat:"articulos",q:"¿Qué artículo regula el reconocimiento múltiple?",r:"Art. 329 CPP: cuando hay varios reconocedores, cada uno por separado.",e:"Evita que los testigos se influencien entre sí."},
+  {cat:"articulos",q:"¿Qué ley regula servicios periciales?",r:"Ley 50, que incluye la Sección 3.8 del Directorio de Servicios Periciales.",e:"Esta ley da fundamento al retrato hablado y otras pericias."},
+  {cat:"articulos",q:"¿Cuántos años de prisión por falso testimonio?",r:"2-4 años (Art. 385 CP). Hasta 4-8 años si afecta sentencia condenatoria.",e:"El reconocedor debe ser informado de estas consecuencias antes del acto."},
+
+];
+
+// Data
+let currentCards = [];
+let bookmarks = JSON.parse(localStorage.getItem('fcBookmarks') || '[]');
+let darkMode = localStorage.getItem('fcDarkMode') === 'true';
+let currentCategory = 'all';
+let currentSearch = '';
+
+const grid = document.getElementById('flashcardGrid');
+const counter = document.getElementById('counter');
+const searchInput = document.getElementById('searchInput');
+const categoryFilter = document.getElementById('categoryFilter');
+const filterPills = document.querySelectorAll('.filter-pill');
+const shuffleBtn = document.getElementById('shuffleBtn');
+const resetBtn = document.getElementById('resetBtn');
+const bookmarksToggle = document.getElementById('bookmarksToggle');
+const bookmarksBar = document.getElementById('bookmarksBar');
+const bookmarkTags = document.getElementById('bookmarkTags');
+const darkToggle = document.getElementById('darkToggle');
+
+// Init
+function init() {
+  if (darkMode) document.body.classList.add('dark-mode');
+  renderAll();
+}
+
+function getFilteredCards() {
+  let cards = flashcardsData.map((c,i) => ({...c, idx: i}));
+  if (currentCategory !== 'all') {
+    cards = cards.filter(c => c.cat === currentCategory);
+  }
+  if (currentSearch.trim()) {
+    const s = currentSearch.toLowerCase();
+    cards = cards.filter(c => c.q.toLowerCase().includes(s) || c.r.toLowerCase().includes(s));
+  }
+  return cards;
+}
+
+function renderAll() {
+  currentCards = getFilteredCards();
+  if (currentCards.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><h3>No se encontraron flashcards</h3><p>Intenta con otros filtros o términos de búsqueda.</p></div>';
+    counter.textContent = '0 resultados';
+    return;
+  }
+  let html = '';
+  currentCards.forEach((card, i) => {
+    const globalIdx = card.idx !== undefined ? card.idx : flashcardsData.findIndex(c => c.q === card.q);
+    const isBookmarked = bookmarks.includes(globalIdx);
+    const catName = getCatName(card.cat);
+    html += `
+    <div class="flashcard cat-${card.cat}" data-idx="${globalIdx}" data-cat="${card.cat}">
+      <button class="flashcard__bookmark ${isBookmarked?'active':''}" data-idx="${globalIdx}">${isBookmarked?'&#9733;':'&#9734;'}</button>
+      <span class="flashcard__number">${i+1}/${currentCards.length}</span>
+      <div class="flashcard__inner">
+        <div class="flashcard__front">
+          <span class="category-badge">${catName}</span>
+          <h3>${card.q}</h3>
+        </div>
+        <div class="flashcard__back">
+          <p><strong>Respuesta:</strong> ${card.r}</p>
+          <p class="explanation"><strong>Explicación:</strong> ${card.e}</p>
+        </div>
+      </div>
+    </div>`;
+  });
+  grid.innerHTML = html;
+  counter.textContent = `${currentCards.length} flashcards`;
+
+  // Flip on click
+  document.querySelectorAll('.flashcard').forEach(el => {
+    el.addEventListener('click', function(e) {
+      if (e.target.closest('.flashcard__bookmark')) return;
+      this.classList.toggle('flipped');
+    });
+  });
+
+  // Bookmarks
+  document.querySelectorAll('.flashcard__bookmark').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const idx = parseInt(this.dataset.idx);
+      toggleBookmark(idx);
+    });
+  });
+}
+
+function getCatName(cat) {
+  const names = {conceptos:'Conceptos',sistemas:'Sistemas',fisionomico:'Fisionómico',somatotipos:'Somatotipos',craneo:'Cráneo',facial:'Facial Forense',reconocimiento:'Reconocimiento',retrato:'Retrato Hablado',oreja:'Pabellón Auricular',otros:'Otros Sistemas',articulos:'Artículos/Códigos'};
+  return names[cat] || cat;
+}
+
+function toggleBookmark(idx) {
+  const pos = bookmarks.indexOf(idx);
+  if (pos > -1) {
+    bookmarks.splice(pos, 1);
+  } else {
+    bookmarks.push(idx);
+  }
+  localStorage.setItem('fcBookmarks', JSON.stringify(bookmarks));
+  renderAll();
+  updateBookmarksBar();
+}
+
+function updateBookmarksBar() {
+  if (bookmarks.length > 0) {
+    bookmarksBar.classList.add('visible');
+    let html = '';
+    bookmarks.forEach(idx => {
+      const card = flashcardsData[idx];
+      if (card) html += `<span class="bookmark-tag" data-idx="${idx}">${card.q.substring(0,40)}...</span>`;
+    });
+    bookmarkTags.innerHTML = html;
+    document.querySelectorAll('.bookmark-tag').forEach(el => {
+      el.addEventListener('click', function() {
+        const idx = parseInt(this.dataset.idx);
+        const card = flashcardsData[idx];
+        if (card) {
+          currentCategory = card.cat;
+          categoryFilter.value = card.cat;
+          filterPills.forEach(p => p.classList.toggle('active', p.dataset.cat === card.cat));
+          currentSearch = '';
+          searchInput.value = '';
+          renderAll();
+          // Scroll to the card
+          setTimeout(() => {
+            const el = document.querySelector(`.flashcard[data-idx="${idx}"]`);
+            if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+          }, 100);
+        }
+      });
+    });
+  } else {
+    bookmarksBar.classList.remove('visible');
+  }
+}
+
+// Category filter pills
+filterPills.forEach(pill => {
+  pill.addEventListener('click', function() {
+    filterPills.forEach(p => p.classList.remove('active'));
+    this.classList.add('active');
+    currentCategory = this.dataset.cat;
+    if (categoryFilter) categoryFilter.value = currentCategory;
+    renderAll();
+  });
+});
+
+// Category select
+categoryFilter.addEventListener('change', function() {
+  currentCategory = this.value;
+  filterPills.forEach(p => p.classList.toggle('active', p.dataset.cat === currentCategory));
+  renderAll();
+});
+
+// Search
+searchInput.addEventListener('input', function() {
+  currentSearch = this.value;
+  renderAll();
+});
+
+// Shuffle
+shuffleBtn.addEventListener('click', function() {
+  const cards = getFilteredCards();
+  if (cards.length < 2) return;
+  // Fisher-Yates
+  for (let i = cards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cards[i], cards[j]] = [cards[j], cards[i]];
+  }
+  // Store shuffled order in data
+  currentCards = cards;
+  let html = '';
+  cards.forEach((card, i) => {
+    const globalIdx = card.idx;
+    const isBookmarked = bookmarks.includes(globalIdx);
+    const catName = getCatName(card.cat);
+    html += `
+    <div class="flashcard cat-${card.cat}" data-idx="${globalIdx}" data-cat="${card.cat}">
+      <button class="flashcard__bookmark ${isBookmarked?'active':''}" data-idx="${globalIdx}">${isBookmarked?'&#9733;':'&#9734;'}</button>
+      <span class="flashcard__number">${i+1}/${cards.length}</span>
+      <div class="flashcard__inner">
+        <div class="flashcard__front">
+          <span class="category-badge">${catName}</span>
+          <h3>${card.q}</h3>
+        </div>
+        <div class="flashcard__back">
+          <p><strong>Respuesta:</strong> ${card.r}</p>
+          <p class="explanation"><strong>Explicación:</strong> ${card.e}</p>
+        </div>
+      </div>
+    </div>`;
+  });
+  grid.innerHTML = html;
+  counter.textContent = `${cards.length} flashcards`;
+  // Re-bind events
+  document.querySelectorAll('.flashcard').forEach(el => {
+    el.addEventListener('click', function(e) {
+      if (e.target.closest('.flashcard__bookmark')) return;
+      this.classList.toggle('flipped');
+    });
+  });
+  document.querySelectorAll('.flashcard__bookmark').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleBookmark(parseInt(this.dataset.idx));
+    });
+  });
+});
+
+// Reset
+resetBtn.addEventListener('click', function() {
+  currentCategory = 'all';
+  currentSearch = '';
+  categoryFilter.value = 'all';
+  searchInput.value = '';
+  filterPills.forEach(p => p.classList.toggle('active', p.dataset.cat === 'all'));
+  renderAll();
+  // Flip all back
+  document.querySelectorAll('.flashcard.flipped').forEach(el => el.classList.remove('flipped'));
+});
+
+// Bookmarks toggle
+bookmarksToggle.addEventListener('click', function() {
+  updateBookmarksBar();
+  bookmarksBar.classList.toggle('visible');
+});
+
+// Dark mode toggle
+darkToggle.addEventListener('click', function() {
+  darkMode = !darkMode;
+  document.body.classList.toggle('dark-mode', darkMode);
+  localStorage.setItem('fcDarkMode', JSON.stringify(darkMode));
+});
+
+// Lightbox
+function openLightbox(src, caption) {
+  document.getElementById('lightbox').classList.add('active');
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightboxCaption').textContent = caption;
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeLightbox();
+});
+
+// Init render
+init();
+updateBookmarksBar();
+
+// Bind gallery lightbox
+document.querySelectorAll('.galeria-card').forEach(function(el) {
+  el.addEventListener('click', function() {
+    const img = this.querySelector('img');
+    if (img) {
+      const caption = this.querySelector('h4').textContent + ' — ' + this.querySelector('p').textContent;
+      openLightbox(img.src, caption);
+    }
+  });
+});
+</script>
+</body>
+</html>
